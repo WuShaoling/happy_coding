@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -14,12 +13,32 @@ struct ListNode {
 
 class Solution {
    public:
+    // ListNode* reverseList(ListNode* head) {
+    //     if (head == NULL || head->next->next == NULL) return head;
+    //     ListNode* cur = reverseList(head->next);
+    //     head->next->next = head;
+    //     head->next = NULL;
+    //     return cur;
+    // }
+
     ListNode* reverseList(ListNode* head) {
-        if (head == NULL || head->next->next == NULL) return head;
-        ListNode* cur = reverseList(head->next);
-        head->next->next = head;
-        head->next = NULL;
-        return cur;
+        if (!head) return head;
+
+        vector<ListNode*> v;
+        while (head) {
+            v.push_back(head);
+            head = head->next;
+        }
+
+        head = new ListNode(0);
+        ListNode* p = head;
+        for (int i = v.size() - 1; i >= 0; i--) {
+            p->next = v[i];
+            p = p->next;
+        }
+        p->next = NULL;
+
+        return head->next;
     }
 };
 
