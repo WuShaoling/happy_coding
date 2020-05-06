@@ -65,7 +65,10 @@
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "list": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "bit": "cpp",
+        "__memory": "cpp",
+        "__functional_03": "cpp"
     },
     "python.pythonPath": "/usr/local/bin/python3"
 }

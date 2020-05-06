@@ -10,25 +10,28 @@ using namespace std;
 class Solution {
    public:
     int change(int amount, vector<int>& coins) {
-        sort(coins.begin(), coins.end());
-        dfs(amount, coins, 0);
-        return res;
-    }
-
-   private:
-    void dfs(int amount, vector<int>& coins, int index) {
-        if (amount == 0) {
-            res++;
-            return;
+        int len = coins.size();
+        if (len == 0) {
+            if (amount == 0) return 1;
+            return 0;
         }
 
-        for (int i = index; i < coins.size(); i++) {
-            if (coins[i] > amount) return;
-            dfs(amount - coins[i], coins, i);
+        vector<vector<int>> dp(len, vector<int>(amount + 1, 0));
+        dp[0][0] = 1;
+        for (int i = coins[0]; i <= amount; i += coins[0]) {
+            dp[0][i] = 1;
         }
-    }
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j <= amount; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if (j >= coins[i]) {
+                    dp[i][j] += dp[i][j - coins[i]];
+                }
+            }
+        }
 
-    int res = 0;
+        return dp[len - 1][amount];
+    }
 };
 
 int main() {

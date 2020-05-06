@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <queue>
 #include <string>
 #include <vector>
 
@@ -7,53 +8,33 @@ using namespace std;
 
 class Solution {
    public:
-    int leastInterval(vector<string>& tasks, int n) {
+    int leastInterval(vector<char>& tasks, int n) {
         if (tasks.size() == 0 || n == 0) return tasks.size();
 
         int arr[26] = {0};
-        for (string c : tasks) {
-            arr[c[0] - 'A']++;
-        }
+        for (char c : tasks) arr[c - 'A']++;
 
-        sort(arr, arr + 26, greater<int>());
-
-        // for (int v : arr) {
-        //     cout << v << ' ';
-        // }
-        // cout << endl;
-
-        int size = (n + 1) * arr[0];
-        // cout << size << endl;
-        int flag[size];
-        memset(flag, 0, size * sizeof(int));
-
+        priority_queue<int, vector<int>, greater<int>> q;
         for (int i = 0; i < 26; i++) {
-            if (arr[i] == 0) break;
-
-            int t = i;
-            for (int j = 0; j < arr[i]; j++) {
-                flag[t] = 1;
-                t += n + 1;
-            }
+            if (arr[i] != 0) q.push(arr[i]);
         }
 
-        // for (int v : flag) {
-        //     cout << v << ' ';
-        // }
-        // cout << endl;
+        int ans = 0;
+        while (!q.empty()) {
+            vector<int> temp;
+            for (int i = 0; i <= n; i++) {
+                if (!q.empty()) {
+                    int t = q.top() - 1;
+                    q.pop();
+                    if (t > 0) temp.push_back(t);
+                }
+                ans++;
+                if (q.empty() && temp.empty()) break;
+            }
+            for (int x : temp) q.push(x);
+        }
 
-        int i = size - 1;
-        while (flag[i] == 0 && i >= 0) i--;
-        // cout << i << endl;
-
-        return i + 1;
-
-        // int ret = 0;
-        // while (i--) {
-        //     if (flag[i] == 0) ret++;
-        // }
-
-        // return ret;
+        return ans;
     }
 };
 
@@ -126,8 +107,15 @@ vector<string> tasks = {
     "C", "C", "A", "A", "B", "C", "G", "B", "D", "I", "D", "E", "H", "J", "J",
     "B", "F", "E", "J", "H", "H", "I", "G", "B", "D"};
 
-
 int main() {
     Solution solution;
-    cout << solution.leastInterval(tasks, 2);
+    priority_queue<int, vector<int>, greater<int>> pq;
+    for (int i = 1; i <= 10; i++) {
+        pq.push(i);
+    }
+    while (!pq.empty()) {
+        cout << pq.top() << ' ';
+        pq.pop();
+    }
+    // cout << solution.leastInterval(tasks, 2);
 }

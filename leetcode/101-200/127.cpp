@@ -1,7 +1,7 @@
 #include <algorithm>
-#include <cmath>
 #include <iostream>
 #include <map>
+#include <queue>
 #include <string>
 #include <vector>
 
@@ -11,59 +11,46 @@ class Solution {
    public:
     int ladderLength(string beginWord, string endWord,
                      vector<string>& wordList) {
-        if (wordList.size() == 0) return false;
+        if (find(wordList.begin(), wordList.end(), endWord) == wordList.end())
+            return 0;
 
-        bool has = false;
-        for (string word : wordList) {
-            if (word == endWord) {
-                has = true;
-                break;
+        map<string, vector<string>> mm;
+        for (string str : wordList) {
+            for (int i = 0; i < str.size(); i++) {
+                string key = str.substr(0, i).append("*").append(
+                    str.substr(i + 1, str.size() - i - 1));
+                mm[key].push_back(str);
             }
         }
-        if (!has) return false;
 
-        vector<bool> visited(wordList.size(), false);
-        helper(beginWord, endWord, wordList, visited, 0);
+        map<string, bool> visited;
 
-        return res == INT_MAX ? 0 : res;
-    }
+        queue<pair<string, int>> q;
+        q.push(make_pair(beginWord, 1));
+        visited[beginWord] = true;
 
-   private:
-    int helper(string& cur, string& target, vector<string>& wordList,
-               vector<bool>& visited, int len) {
-        if (cur == target) {
-            return len + 1;
-        }
+        while (!q.empty()) {
+            pair<string, int> p = q.front();
+            q.pop();
 
-        for (int i = 0; i < wordList.size(); i++) {
-            if (visited[i] || !match(cur, wordList[i])) continue;
+            string word = p.first;
+            int level = p.second;
+            visited[word] = true;
 
-            string key = wordList[i] + "_" + target;
-            if (mm.find(key) != mm.end()) return len + mm[key];
-
-            visited[i] = true;
-            int count = helper(wordList[i], target, wordList, visited, len + 1);
-            if (count != -1) {
-                mm[key] = count;
-                res = min(res, len + count);
+            for (int i = 0; i < word.size(); i++) {
+                string key = word.substr(0, i).append("*").append(
+                    word.substr(i + 1, word.size() - i - 1));
+                for (string adjacentWord : mm[key]) {
+                    if (adjacentWord == endWord) return level + 1;
+                    if (!visited[adjacentWord]) {
+                        q.push(make_pair(adjacentWord, level + 1));
+                        visited[adjacentWord] = true;
+                    }
+                }
             }
-            visited[i] = false;
         }
-
-        return -1;
+        return 0;
     }
-
-    bool match(string& cur, string& target) {
-        int diff = 0;
-        for (int i = 0; i < cur.size(); i++) {
-            if (cur[i] != target[i]) diff++;
-            if (diff > 1) return false;
-        }
-        return true;
-    }
-
-    int res = INT_MAX;
-    map<string, int> mm;
 };
 
 int main() {

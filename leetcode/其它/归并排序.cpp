@@ -4,8 +4,8 @@
 
 using namespace std;
 
-vector<int> temp(100);
 void merge(vector<int>& nums, int low, int mid, int high) {
+    vector<int> temp(high - low + 1);
     int i = low;
     int j = mid + 1;
     int k = 0;
@@ -34,7 +34,7 @@ vector<int> sort(vector<int>& arr, int low, int high) {
 }
 
 int main() {
-    vector<int> arr = {0, 1, 4, 2, 3, 6, 7, 8};
+    vector<int> arr = {1, 3, 2, 3, 1};
     vector<int> res = sort(arr, 0, arr.size() - 1);
     for (int i : res) cout << i << " ";
 }
