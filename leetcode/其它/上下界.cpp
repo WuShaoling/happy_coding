@@ -1,5 +1,5 @@
-#include <vector>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 /*
@@ -14,6 +14,7 @@ using namespace std;
 如果不存在，返回一个下标k，在此处插入元素，原来的元素都往后挪，序列仍然有序
 */
 int lower_bound(const vector<int> &nums, int target) {
+    // [)
     int left = 0, right = nums.size(), mid;
     while (left < right) {
         mid = left + (right - left) / 2;
@@ -59,4 +60,8 @@ int upper_bound(const vector<int> &nums, int target) {
     return left;
 }
 
-int main() {}
+int main() {
+    vector<int> nums = {-1, -2, 0, 0, 0, 0, 3, 4};
+    cout << lower_bound(nums, 0) << endl;
+    cout << upper_bound(nums, 0) - 1 << endl;
+}
